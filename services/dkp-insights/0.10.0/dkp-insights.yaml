@@ -11,7 +11,7 @@ spec:
         kind: HelmRepository
         name: mesosphere.github.io-dkp-insights-charts-attached
         namespace: ${workspaceNamespace}
-      version: v0.1.0-rc1
+      version: v0.1.0-rc.2
   interval: 15s
   install:
     remediation:
