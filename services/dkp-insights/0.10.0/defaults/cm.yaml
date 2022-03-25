@@ -10,9 +10,9 @@ data:
       registry: "docker.io"
       repository: "mesosphere/insights"
       tag: "v0.1.0-rc1"
-      imagePullPolicy: "Always"
+      imagePullPolicy: "IfNotPresent"
     backend:
-       log_level: "DEBUG"
+       log_level: "INFO"
     cleanup:
       schedule: "@every 37m"
       logLevel: "DEBUG"
