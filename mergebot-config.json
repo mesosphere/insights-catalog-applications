@@ -18,19 +18,19 @@
         "type": "teamcity",
         "required": "true",
         "priority": 2,
-        "id": "ClosedSource_Kommander2_DkpCatalogApplications_PreCommitChecks"
+        "id": "ClosedSource_Kommander2_InsightsCatalogApplications_PreCommitChecks"
       },
       "insights-catalog-applications/unit-tests": {
         "type": "teamcity",
         "required": "true",
         "priority": 2,
-        "id": "ClosedSource_Kommander2_DkpCatalogApplications_UnitTests"
+        "id": "ClosedSource_Kommander2_InsightsCatalogApplications_UnitTests"
       },
       "insights-catalog-applications/build-image-bundle": {
         "type": "teamcity",
         "required": "true",
         "priority": 2,
-        "id": "ClosedSource_Kommander2_DkpCatalogApplications_BuildImageBundle"
+        "id": "ClosedSource_Kommander2_InsightsCatalogApplications_BuildImageBundle"
       }
     },
     "autotest-on-backports-and-trains": true,
