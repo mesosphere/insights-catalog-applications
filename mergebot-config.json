@@ -14,19 +14,19 @@
       "jira_regex": "((?:COPS|D2IQ)-\\d+)"
     },
     "test-binding": {
-      "dkp-catalog-applications/pre-commit": {
+      "insights-catalog-applications/pre-commit": {
         "type": "teamcity",
         "required": "true",
         "priority": 2,
         "id": "ClosedSource_Kommander2_DkpCatalogApplications_PreCommitChecks"
       },
-      "dkp-catalog-applications/unit-tests": {
+      "insights-catalog-applications/unit-tests": {
         "type": "teamcity",
         "required": "true",
         "priority": 2,
         "id": "ClosedSource_Kommander2_DkpCatalogApplications_UnitTests"
       },
-      "dkp-catalog-applications/build-image-bundle": {
+      "insights-catalog-applications/build-image-bundle": {
         "type": "teamcity",
         "required": "true",
         "priority": 2,
