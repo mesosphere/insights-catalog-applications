@@ -11,7 +11,7 @@ spec:
         kind: HelmRepository
         name: mesosphere.github.io-dkp-insights-charts-attached
         namespace: ${workspaceNamespace}
-      version: v0.1.0-rc.2
+      version: v0.1.2
   interval: 15s
   install:
     remediation:
@@ -21,6 +21,6 @@ spec:
       retries: 30
   valuesFrom:
     - kind: ConfigMap
-      name: dkp-insights-0.10.0-d2iq-defaults
+      name: dkp-insights-0.1.2-d2iq-defaults
   releaseName: dkp-insights
   targetNamespace: ${releaseNamespace}

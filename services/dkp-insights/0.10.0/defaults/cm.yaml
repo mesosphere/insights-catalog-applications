@@ -2,14 +2,14 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: dkp-insights-0.10.0-d2iq-defaults
+  name: dkp-insights-0.1.2-d2iq-defaults
   namespace: ${releaseNamespace}
 data:
   values.yaml: |
     image:
       registry: "docker.io"
       repository: "mesosphere/insights"
-      tag: "v0.1.0-rc.2"
+      tag: "v0.1.2"
       imagePullPolicy: "IfNotPresent"
     backend:
        log_level: "INFO"
