@@ -12,8 +12,10 @@ GOARCH ?= $(shell go env GOARCH)
 GOOS ?= $(shell go env GOOS)
 MINDTHEGAP_VERSION ?= v0.13.1
 GOJQ_VERSION ?= v0.12.4
+DKP_BLOODHOUND_VERSION ?= 0.2.1
 export GOJQ_BIN = bin/$(GOOS)/$(GOARCH)/gojq-$(GOJQ_VERSION)
 export MINDTHEGAP_BIN = bin/$(GOOS)/$(GOARCH)/mindthegap
+export DKP_BLOODHOUND_BIN = bin/$(GOOS)/$(GOARCH)/dkp-bloodhound
 
 ifneq (,$(filter tar (GNU tar)%, $(shell tar --version)))
 WILDCARDS := --wildcards
