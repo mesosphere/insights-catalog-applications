@@ -25,3 +25,16 @@ $(GOJQ_BIN):
 	mv _install/gojq $@
 	chmod 755 $@
 	rm -rf _install
+
+.PHONY: bloodhound
+bloodhound: $(DKP_BLOODHOUND_BIN)
+	$(call print-target)
+
+$(DKP_BLOODHOUND_BIN):
+	$(call print-target)
+	mkdir -p $(dir $@) _install
+	curl -fsSL https://downloads.mesosphere.io/dkp-bloodhound/dkp-bloodhound_v$(DKP_BLOODHOUND_VERSION)_$(GOOS)_$(GOARCH).tar.gz | tar xz -C _install 'dkp-bloodhound'
+	mv _install/dkp-bloodhound $@
+	chmod 755 $@
+	rm -rf _install
+
