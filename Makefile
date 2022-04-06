@@ -8,14 +8,19 @@ INTERACTIVE := $(shell [ -t 0 ] && echo 1)
 
 export GITHUB_ORG ?= mesosphere
 export GITHUB_REPOSITORY ?= insights-catalog-applications
+export INSIGHTS_CATALOG_APPLICATIONS_REF ?= main
+export INSIGHTS_CATALOG_APPLICATIONS_DIR ?= $(GITHUB_REPOSITORY)
+
 GOARCH ?= $(shell go env GOARCH)
 GOOS ?= $(shell go env GOOS)
 MINDTHEGAP_VERSION ?= v0.13.1
 GOJQ_VERSION ?= v0.12.4
 DKP_BLOODHOUND_VERSION ?= 0.2.1
+DKP_CLI_VERSION ?= v2.2.0-rc.8
 export GOJQ_BIN = bin/$(GOOS)/$(GOARCH)/gojq-$(GOJQ_VERSION)
 export MINDTHEGAP_BIN = bin/$(GOOS)/$(GOARCH)/mindthegap
 export DKP_BLOODHOUND_BIN = bin/$(GOOS)/$(GOARCH)/dkp-bloodhound
+export DKP_CLI_BIN = bin/$(GOOS)/$(GOARCH)/dkp
 
 ifneq (,$(filter tar (GNU tar)%, $(shell tar --version)))
 WILDCARDS := --wildcards

@@ -2,6 +2,7 @@ BUILD_DIR := _build
 IMAGE_TAR_FILE := $(BUILD_DIR)/dkp-insights-image-bundle.tar.gz
 REPO_ARCHIVE_FILE := $(BUILD_DIR)/dkp-insights.tar.gz
 CATALOG_IMAGES_TXT := $(BUILD_DIR)/dkp_insights_images.txt
+INSIGHTS_CATALOG_APPLICATIONS_CHART_BUNDLE := $(BUILD_DIR)/dkp-insights-charts-bundle.tar.gz
 RELEASE_S3_BUCKET ?= downloads.mesosphere.io
 
 CATALOG_APPLICATIONS_VERSION ?= ""
@@ -33,6 +34,28 @@ release.s3:
 ifeq ($(CATALOG_APPLICATIONS_VERSION),"")
 	$(info CATALOG_APPLICATIONS_VERSION should be set to the version which is part of the s3 file path)
 else
+	aws s3 cp --no-progress --acl bucket-owner-full-control $(INSIGHTS_CATALOG_APPLICATIONS_CHART_BUNDLE) s3://$(RELEASE_S3_BUCKET)/dkp/$(CATALOG_APPLICATIONS_VERSION)/dkp-insights-charts-bundle-$(CATALOG_APPLICATIONS_VERSION).tar.gz
 	aws s3 cp --no-progress --acl bucket-owner-full-control $(REPO_ARCHIVE_FILE) s3://$(RELEASE_S3_BUCKET)/dkp/$(CATALOG_APPLICATIONS_VERSION)/dkp-insights-$(CATALOG_APPLICATIONS_VERSION).tar.gz
 	aws s3 cp --no-progress --acl bucket-owner-full-control $(IMAGE_TAR_FILE) s3://$(RELEASE_S3_BUCKET)/dkp/$(CATALOG_APPLICATIONS_VERSION)/dkp-insights-image-bundle-$(CATALOG_APPLICATIONS_VERSION).tar.gz
 endif
+
+.PHONY: insights-catalog-applications
+insights-catalog-applications: ## Clones the insights-catalog-applications repo locally or updates the clone
+insights-catalog-applications:
+	$(call print-target)
+	rm -rf $(INSIGHTS_CATALOG_APPLICATIONS_DIR) && \
+	  mkdir -p $(INSIGHTS_CATALOG_APPLICATIONS_DIR) && \
+	  git clone -q https://github.com/mesosphere/insights-catalog-applications.git $(INSIGHTS_CATALOG_APPLICATIONS_DIR) && \
+	  cd $(INSIGHTS_CATALOG_APPLICATIONS_DIR) && \
+	  git checkout $(INSIGHTS_CATALOG_APPLICATIONS_REF);
+
+.PHONY: release.charts-bundle
+release.charts-bundle: ## Creates the chart bundle via the Kommander CLI
+release.charts-bundle: $(DKP_CLI_BIN) insights-catalog-applications
+	$(call print-target)
+	echo "Building charts bundle from insights-catalog-applications repository: "
+	rm -f $(INSIGHTS_CATALOG_APPLICATIONS_CHART_BUNDLE)
+	mkdir -p $(BUILD_DIR)
+	$(DKP_CLI_BIN) create chart-bundle \
+		--catalog-repository $(INSIGHTS_CATALOG_APPLICATIONS_DIR) \
+		--output $(INSIGHTS_CATALOG_APPLICATIONS_CHART_BUNDLE)
