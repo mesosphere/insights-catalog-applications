@@ -37,3 +37,15 @@ $(DKP_BLOODHOUND_BIN):
 	mv _install/dkp-bloodhound $@
 	chmod 755 $@
 	rm -rf _install
+
+.PHONY: dkp-cli
+dkp-cli: $(DKP_CLI_BIN)
+	$(call print-target)
+
+$(DKP_CLI_BIN):
+	$(call print-target)
+	mkdir -p $(dir $@) _install
+	curl -fsSL https://downloads.mesosphere.io/dkp/$(DKP_CLI_VERSION)/dkp_$(DKP_CLI_VERSION)_$(GOOS)_$(GOARCH).tar.gz | tar xz -C _install 'dkp'
+	mv _install/dkp $@
+	chmod 755 $@
+	rm -rf _install
