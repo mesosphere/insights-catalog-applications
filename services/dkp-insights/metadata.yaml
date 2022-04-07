@@ -1,7 +1,8 @@
 displayName: DKP Insights
 description: DKP Insights is D2iQ’s analytics tool used to ensure clusters are secure and in debugging, monitoring, and anticipating future issues with your cluster.
 category:
-  - Observability
+  - observability
+  - monitoring
 certifications:
   - airgapped
 type: catalog
