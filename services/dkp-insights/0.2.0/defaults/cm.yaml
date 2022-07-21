@@ -389,6 +389,7 @@ data:
             - snapshot-controller
             - tigera-operator
             - velero
+            - update-tenant-crd-metadata
             rules:
             - cpuLimitsMissing
             - cpuRequestsMissing
@@ -433,6 +434,7 @@ data:
             - traefik-forward-auth
             - traefik-forward-auth-mgmt
             - velero
+            - update-tenant-crd-metadata
             rules:
             - insecureCapabilities
             - notReadOnlyRootFilesystem
@@ -524,6 +526,7 @@ data:
             - traefik-forward-auth
             - traefik-forward-auth-mgmt
             - velero
+            - update-tenant-crd-metadata
             rules:
             - pullPolicyNotAlways
           - controllerNames:
@@ -548,6 +551,7 @@ data:
             - kubetunnel-webhook
             - minio
             - minio-operator
+            - update-tenant-crd-metadata
             rules:
             - insecureCapabilities
             - notReadOnlyRootFilesystem
