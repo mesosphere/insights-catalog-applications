@@ -6,6 +6,7 @@ category:
 certifications:
   - airgapped
 type: catalog
+allowMultipleInstances: false
 scope:
   - workspace
 overview: |-
