@@ -49,3 +49,10 @@ dkp-insights-0.2.2:
  - "docker.io/mesosphere/insights:v0.2.2"
  - "docker.io/chrislusf/seaweedfs:3.18"
  - "quay.io/fairwinds/polaris:5.1"
+dkp-insights-0.2.3:
+- "docker.io/bitnami/bitnami-shell:10-debian-10-r305"
+- "docker.io/bitnami/postgres-exporter:0.10.0-debian-10-r172"
+- "docker.io/bitnami/postgresql:11.14.0-debian-10-r28"
+- "docker.io/chrislusf/seaweedfs:3.18"
+- "docker.io/mesosphere/insights:v0.2.3"
+- "quay.io/fairwinds/polaris:5.1"
