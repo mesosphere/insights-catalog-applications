@@ -1,0 +1,1090 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dkp-insights-0.3.0-beta.1-d2iq-defaults
+  namespace: ${releaseNamespace}
+data:
+  values.yaml: |
+    backend:
+      alertmanager:
+        db_channel_buffer_size: "16"
+      apiPort: "8090"
+      eventExpirationTime: 24h
+      log_level: INFO
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 512Mi
+        requests:
+          cpu: 250m
+          memory: 128Mi
+      synchronous_view_details: false
+      webhookPort: "8080"
+    cleanup:
+      alertsTTL: 168h
+      dbSizeLimit: 8Gi
+      eventsTTL: 168h
+      insightsTTL: 168h
+      logLevel: INFO
+      rejectedAlertsTTL: 168h
+      resolutionAggregatesTTL: 10000h
+      resources:
+        limits:
+          cpu: 250m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 64Mi
+      schedule: '@every 37m'
+    image:
+      imagePullPolicy: IfNotPresent
+      registry: docker.io
+      repository: mesosphere/insights
+      tag: v0.3.0-beta.1
+    initdb:
+      resources:
+        limits:
+          cpu: 250m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 64Mi
+    objectstore:
+      initTTL:
+        image:
+          imagePullPolicy: IfNotPresent
+          registry: docker.io
+          repository: chrislusf/seaweedfs
+          tag: "3.20"
+        resources:
+          limits:
+            cpu: 250m
+            memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 64Mi
+    pluto:
+      enabled: true
+      image:
+        pullPolicy: IfNotPresent
+        repository: quay.io/fairwinds/pluto
+        tag: v5.10.6
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+      schedule: '@every 41m'
+      upload:
+        logLevel: INFO
+        resources:
+          limits:
+            cpu: 250m
+            memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 64Mi
+    polaris:
+      config:
+        checks:
+          cpuLimitsMissing: warning
+          cpuRequestsMissing: warning
+          dangerousCapabilities: danger
+          deploymentMissingReplicas: warning
+          hostIPCSet: danger
+          hostNetworkSet: danger
+          hostPIDSet: danger
+          hostPortSet: warning
+          insecureCapabilities: warning
+          livenessProbeMissing: warning
+          memoryLimitsMissing: warning
+          memoryRequestsMissing: warning
+          metadataAndNameMismatched: ignore
+          missingPodDisruptionBudget: ignore
+          notReadOnlyRootFilesystem: warning
+          pdbDisruptionsIsZero: warning
+          priorityClassNotSet: ignore
+          privilegeEscalationAllowed: danger
+          pullPolicyNotAlways: warning
+          readinessProbeMissing: warning
+          runAsPrivileged: danger
+          runAsRootAllowed: danger
+          tagNotSpecified: danger
+          tlsSettingsMissing: warning
+        exemptions:
+          - controllerNames:
+              - kube-apiserver
+              - kube-proxy
+              - kube-scheduler
+              - etcd-manager-events
+              - kube-controller-manager
+              - kube-dns
+              - etcd-manager-main
+            namespace: kube-system
+            rules:
+              - hostPortSet
+              - hostNetworkSet
+              - readinessProbeMissing
+              - livenessProbeMissing
+              - cpuRequestsMissing
+              - cpuLimitsMissing
+              - memoryRequestsMissing
+              - memoryLimitsMissing
+              - runAsRootAllowed
+              - runAsPrivileged
+              - notReadOnlyRootFilesystem
+              - hostPIDSet
+          - controllerNames:
+              - kube-flannel-ds
+            rules:
+              - notReadOnlyRootFilesystem
+              - runAsRootAllowed
+              - notReadOnlyRootFilesystem
+              - readinessProbeMissing
+              - livenessProbeMissing
+              - cpuLimitsMissing
+          - controllerNames:
+              - cert-manager
+            rules:
+              - notReadOnlyRootFilesystem
+              - runAsRootAllowed
+              - readinessProbeMissing
+              - livenessProbeMissing
+          - controllerNames:
+              - cluster-autoscaler
+            rules:
+              - notReadOnlyRootFilesystem
+              - runAsRootAllowed
+              - readinessProbeMissing
+          - controllerNames:
+              - vpa
+            rules:
+              - runAsRootAllowed
+              - readinessProbeMissing
+              - livenessProbeMissing
+              - notReadOnlyRootFilesystem
+          - controllerNames:
+              - datadog
+            rules:
+              - runAsRootAllowed
+              - readinessProbeMissing
+              - livenessProbeMissing
+              - notReadOnlyRootFilesystem
+          - controllerNames:
+              - nginx-ingress-controller
+            rules:
+              - privilegeEscalationAllowed
+              - insecureCapabilities
+              - runAsRootAllowed
+          - controllerNames:
+              - dns-controller
+              - datadog-datadog
+              - kube-flannel-ds
+              - kube2iam
+              - aws-iam-authenticator
+              - datadog
+              - kube2iam
+            rules:
+              - hostNetworkSet
+          - controllerNames:
+              - aws-iam-authenticator
+              - aws-cluster-autoscaler
+              - kube-state-metrics
+              - dns-controller
+              - external-dns
+              - dnsmasq
+              - autoscaler
+              - kubernetes-dashboard
+              - install-cni
+              - kube2iam
+            rules:
+              - readinessProbeMissing
+              - livenessProbeMissing
+          - controllerNames:
+              - aws-iam-authenticator
+              - nginx-ingress-default-backend
+              - aws-cluster-autoscaler
+              - kube-state-metrics
+              - dns-controller
+              - external-dns
+              - kubedns
+              - dnsmasq
+              - autoscaler
+              - tiller
+              - kube2iam
+            rules:
+              - runAsRootAllowed
+          - controllerNames:
+              - aws-iam-authenticator
+              - nginx-ingress-controller
+              - nginx-ingress-default-backend
+              - aws-cluster-autoscaler
+              - kube-state-metrics
+              - dns-controller
+              - external-dns
+              - kubedns
+              - dnsmasq
+              - autoscaler
+              - tiller
+              - kube2iam
+            rules:
+              - notReadOnlyRootFilesystem
+          - controllerNames:
+              - cert-manager
+              - dns-controller
+              - kubedns
+              - dnsmasq
+              - autoscaler
+              - insights-agent-goldilocks-vpa-install
+              - datadog
+            rules:
+              - cpuRequestsMissing
+              - cpuLimitsMissing
+              - memoryRequestsMissing
+              - memoryLimitsMissing
+          - controllerNames:
+              - kube2iam
+              - kube-flannel-ds
+            rules:
+              - runAsPrivileged
+          - controllerNames:
+              - kube-hunter
+            rules:
+              - hostPIDSet
+          - controllerNames:
+              - polaris
+              - kube-hunter
+              - goldilocks
+              - insights-agent-goldilocks-vpa-install
+            rules:
+              - notReadOnlyRootFilesystem
+          - controllerNames:
+              - insights-agent-goldilocks-controller
+            rules:
+              - livenessProbeMissing
+              - readinessProbeMissing
+          - controllerNames:
+              - insights-agent-goldilocks-vpa-install
+              - kube-hunter
+            rules:
+              - runAsRootAllowed
+          - controllerNames:
+              - kubecost-grafana
+              - kubecost-kube-state-metrics
+              - kubecost-prometheus-alertmanager
+              - kubecost-prometheus-server
+              - prereq-wait
+            rules:
+              - cpuLimitsMissing
+              - cpuRequestsMissing
+              - memoryLimitsMissing
+              - memoryRequestsMissing
+          - controllerNames:
+              - prereq-wait
+            rules:
+              - insecureCapabilities
+              - notReadOnlyRootFilesystem
+              - privilegeEscalationAllowed
+              - runAsRootAllowed
+          - controllerNames:
+              - kubecost-grafana
+              - kubecost-kube-state-metrics
+              - kubecost-prometheus-alertmanager
+              - kubecost-prometheus-server
+              - prereq-wait
+            rules:
+              - pullPolicyNotAlways
+          - controllerNames:
+              - kubecost-cost-analyzer
+            rules:
+              - cpuLimitsMissing
+              - memoryLimitsMissing
+          - controllerNames:
+              - kubecost-cost-analyzer
+              - kubecost-grafana
+              - kubecost-kube-state-metrics
+              - kubecost-prometheus-alertmanager
+              - kubecost-prometheus-server
+            rules:
+              - insecureCapabilities
+              - notReadOnlyRootFilesystem
+              - privilegeEscalationAllowed
+          - controllerNames:
+              - kubecost-cost-analyzer
+              - kubecost-grafana
+              - kubecost-kube-state-metrics
+              - kubecost-prometheus-alertmanager
+              - kubecost-prometheus-server
+            rules:
+              - deploymentMissingReplicas
+          - controllerNames:
+              - kubecost-cost-analyzer
+            rules:
+              - livenessProbeMissing
+              - tlsSettingsMissing
+          - controllerNames:
+              - kubecost-grafana
+              - kubecost-prometheus-alertmanager
+              - kubecost-prometheus-server
+            rules:
+              - livenessProbeMissing
+              - readinessProbeMissing
+          - controllerNames:
+              - kubecost-grafana
+            rules:
+              - tlsSettingsMissing
+          - controllerNames:
+              - calico-kube-controllers
+              - calico-node
+              - calico-typha
+              - capa-controller-manager
+              - capg-controller-manager
+              - capi-controller-manager
+              - capi-kubeadm-bootstrap-controller-manager
+              - capi-kubeadm-control-plane-controller-manager
+              - cappp-controller-manager
+              - capv-controller-manager
+              - capz-controller-manager
+              - cleanup-old-certificate
+              - cluster-autoscaler
+              - console
+              - delete-minio-operator-deployment
+              - dex-dex-controller
+              - dex-grpc-certs
+              - ebs-csi-controller
+              - ebs-csi-node
+              - external-dns
+              - gitea
+              - grafana-logging
+              - grafana-loki-loki-distributed-compactor
+              - grafana-loki-loki-distributed-distributor
+              - grafana-loki-loki-distributed-gateway
+              - grafana-loki-loki-distributed-ingester
+              - grafana-loki-loki-distributed-querier
+              - grafana-loki-loki-distributed-query-frontend
+              - karma-traefik-certs
+              - kubecost-traefik-certs
+              - prometheus-traefik-certs
+              - kommander-appmanagement
+              - kommander-cm
+              - kommander-flux-operator
+              - kommander-licensing-cm
+              - kube-oidc-proxy
+              - kube-prometheus-stack-grafana
+              - kube-prometheus-stack-kube-state-metrics
+              - kube-prometheus-stack-operator
+              - kube-prometheus-stack-prometheus-node-exporter
+              - kubernetes-dashboard
+              - logging-operator-logging-fluentd
+              - node-feature-discovery-master
+              - node-feature-discovery-worker
+              - prometheus-kube-prometheus-stack-prometheus
+              - snapshot-controller
+              - tigera-operator
+              - velero
+              - update-tenant-crd-metadata
+            rules:
+              - cpuLimitsMissing
+              - cpuRequestsMissing
+              - memoryLimitsMissing
+              - memoryRequestsMissing
+          - controllerNames:
+              - calico-kube-controllers
+              - calico-node
+              - calico-typha
+              - capa-controller-manager
+              - capg-controller-manager
+              - capi-controller-manager
+              - capi-kubeadm-bootstrap-controller-manager
+              - capi-kubeadm-control-plane-controller-manager
+              - cappp-controller-manager
+              - capv-controller-manager
+              - capz-controller-manager
+              - cleanup-old-certificate
+              - cluster-observer
+              - delete-minio-operator-deployment
+              - dex
+              - dex-dex-controller
+              - dex-k8s-authenticator
+              - ebs-csi-controller
+              - ebs-csi-node
+              - external-dns
+              - gitea
+              - grafana-loki-minio-ss
+              - karma-traefik-certs
+              - kubecost-traefik-certs
+              - prometheus-traefik-certs
+              - kommander-fluent-bit
+              - kommander-flux-operator
+              - kommander-kommander-ui
+              - kommander-traefik
+              - kube-oidc-proxy
+              - kubetunnel
+              - logging-operator
+              - logging-operator-logging-fluentbit
+              - logging-operator-logging-fluentd
+              - snapshot-controller
+              - tigera-operator
+              - traefik-forward-auth
+              - traefik-forward-auth-mgmt
+              - velero
+              - update-tenant-crd-metadata
+            rules:
+              - insecureCapabilities
+              - notReadOnlyRootFilesystem
+              - privilegeEscalationAllowed
+              - runAsRootAllowed
+          - controllerNames:
+              - alertmanager-kube-prometheus-stack-alertmanager
+              - calico-kube-controllers
+              - calico-node
+              - calico-typha
+              - capa-controller-manager
+              - capg-controller-manager
+              - capi-controller-manager
+              - capi-kubeadm-bootstrap-controller-manager
+              - capi-kubeadm-control-plane-controller-manager
+              - cappp-controller-manager
+              - capv-controller-manager
+              - capz-controller-manager
+              - cert-manager
+              - cert-manager-cainjector
+              - cert-manager-webhook
+              - cleanup-old-certificate
+              - cluster-autoscaler
+              - cluster-observer-2360587938
+              - cluster-observer-764580614
+              - console
+              - coredns
+              - delete-minio-operator-deployment
+              - dex
+              - dex-dex-controller
+              - dex-grpc-certs
+              - dex-k8s-authenticator
+              - ebs-csi-controller
+              - ebs-csi-node
+              - external-dns
+              - gatekeeper-audit
+              - gatekeeper-controller-manager
+              - gitea-memcached
+              - gitea-postgresql
+              - grafana-logging
+              - grafana-loki-loki-distributed-compactor
+              - grafana-loki-loki-distributed-distributor
+              - grafana-loki-loki-distributed-gateway
+              - grafana-loki-loki-distributed-ingester
+              - grafana-loki-loki-distributed-querier
+              - grafana-loki-loki-distributed-query-frontend
+              - grafana-loki-minio-ss
+              - helm-controller
+              - karma-traefik-certs
+              - kubecost-traefik-certs
+              - prometheus-traefik-certs
+              - kommander-appmanagement
+              - kommander-authorizedlister
+              - kommander-capimate
+              - kommander-cm
+              - kommander-flux-operator
+              - kommander-kommander-ui
+              - kommander-licensing-cm
+              - kommander-licensing-webhook
+              - kommander-reloader-reloader
+              - kommander-traefik
+              - kommander-webhook
+              - kube-oidc-proxy
+              - kube-prometheus-stack-grafana
+              - kube-prometheus-stack-kube-state-metrics
+              - kube-prometheus-stack-operator
+              - kube-prometheus-stack-prometheus-node-exporter
+              - kube-proxy
+              - kube-scheduler
+              - kubefed-admission-webhook
+              - kubefed-controller-manager
+              - kubetunnel
+              - kubetunnel-webhook
+              - kustomize-controller
+              - logging-operator
+              - logging-operator-logging-fluentbit
+              - logging-operator-logging-fluentd
+              - minio
+              - minio-operator
+              - node-feature-discovery-master
+              - node-feature-discovery-worker
+              - notification-controller
+              - prometheus-adapter
+              - prometheus-kube-prometheus-stack-prometheus
+              - snapshot-controller
+              - source-controller
+              - tigera-operator
+              - traefik-forward-auth
+              - traefik-forward-auth-mgmt
+              - velero
+              - update-tenant-crd-metadata
+            rules:
+              - pullPolicyNotAlways
+          - controllerNames:
+              - console
+              - dex-grpc-certs
+              - gitea-memcached
+              - gitea-postgresql
+              - grafana-logging
+              - kommander-appmanagement
+              - kommander-authorizedlister
+              - kommander-capimate
+              - kommander-cm
+              - kommander-licensing-cm
+              - kommander-licensing-webhook
+              - kommander-reloader-reloader
+              - kommander-webhook
+              - kube-prometheus-stack-grafana
+              - kube-prometheus-stack-kube-state-metrics
+              - kube-prometheus-stack-prometheus-node-exporter
+              - kubefed-admission-webhook
+              - kubefed-controller-manager
+              - kubetunnel-webhook
+              - minio
+              - minio-operator
+              - update-tenant-crd-metadata
+            rules:
+              - insecureCapabilities
+              - notReadOnlyRootFilesystem
+              - privilegeEscalationAllowed
+          - controllerNames:
+              - alertmanager-kube-prometheus-stack-alertmanager
+              - capa-controller-manager
+              - cluster-observer
+              - console
+              - dex
+              - dex-dex-controller
+              - ebs-csi-controller
+              - ebs-csi-node
+              - grafana-logging
+              - grafana-loki-loki-distributed-query-frontend
+              - grafana-loki-minio-ss
+              - karma-traefik-certs
+              - kubecost-traefik-certs
+              - prometheus-traefik-certs
+              - kommander-appmanagement
+              - kommander-authorizedlister
+              - kommander-cm
+              - kommander-flux-operator
+              - kommander-licensing-cm
+              - kube-prometheus-stack-grafana
+              - kube-prometheus-stack-operator
+              - kubetunnel
+              - logging-operator
+              - logging-operator-logging-fluentbit
+              - logging-operator-logging-fluentd
+              - minio
+              - minio-operator
+              - node-feature-discovery-worker
+              - prometheus-kube-prometheus-stack-prometheus
+              - snapshot-controller
+              - tigera-operator
+              - velero
+            rules:
+              - livenessProbeMissing
+              - readinessProbeMissing
+          - controllerNames:
+              - dex
+              - dex-k8s-authenticator
+              - gitea-memcached
+              - gitea-postgresql
+              - minio-operator
+              - traefik-forward-auth
+              - traefik-forward-auth-mgmt
+            rules:
+              - cpuLimitsMissing
+              - memoryLimitsMissing
+          - controllerNames:
+              - cluster-autoscaler
+              - grafana-loki-loki-distributed-compactor
+              - grafana-loki-loki-distributed-distributor
+              - grafana-loki-loki-distributed-gateway
+              - grafana-loki-loki-distributed-ingester
+              - grafana-loki-loki-distributed-querier
+              - kubefed-admission-webhook
+            rules:
+              - livenessProbeMissing
+          - controllerNames:
+              - dex
+              - dex-k8s-authenticator
+              - gitea
+              - grafana-logging
+              - kommander-kommander-ui
+              - kube-prometheus-stack-alertmanager
+              - kube-prometheus-stack-grafana
+              - kube-prometheus-stack-prometheus
+              - traefik-dashboard
+              - traefik-forward-auth
+              - traefik-forward-auth-mgmt
+              - velero-minio
+              - velero-minio-ssl
+              - centralized-grafana
+              - karma
+              - thanos-query-http
+              - kommander-kubecost-cost-analyzer
+            rules:
+              - tlsSettingsMissing
+          - controllerNames:
+              - cert-manager
+              - cert-manager-cainjector
+              - cert-manager-webhook
+              - cluster-autoscaler
+              - kube-proxy
+              - kube-scheduler
+            rules:
+              - insecureCapabilities
+              - privilegeEscalationAllowed
+          - controllerNames:
+              - kommander-fluent-bit
+            rules:
+              - cpuLimitsMissing
+              - runAsPrivileged
+          - controllerNames:
+              - calico-node
+            rules:
+              - hostNetworkSet
+              - runAsPrivileged
+          - controllerNames:
+              - logging-operator-logging-fluentbit
+            rules:
+              - cpuLimitsMissing
+          - controllerNames:
+              - ebs-csi-node
+            rules:
+              - runAsPrivileged
+          - controllerNames:
+              - kube-prometheus-stack-prometheus-node-exporter
+            rules:
+              - hostNetworkSet
+              - hostPIDSet
+              - hostPortSet
+          - controllerNames:
+              - calico-typha
+            rules:
+              - hostNetworkSet
+              - hostPortSet
+          - controllerNames:
+              - calico-kube-controllers
+              - capa-controller-manager
+              - capg-controller-manager
+              - capi-controller-manager
+              - capi-kubeadm-bootstrap-controller-manager
+              - capi-kubeadm-control-plane-controller-manager
+              - cappp-controller-manager
+              - capv-controller-manager
+              - capz-controller-manager
+              - cert-manager
+              - cert-manager-cainjector
+              - cert-manager-webhook
+              - cluster-autoscaler
+              - cluster-observer
+              - console
+              - dex
+              - dex-dex-controller
+              - dex-k8s-authenticator
+              - external-dns
+              - gatekeeper-audit
+              - gitea-memcached
+              - grafana-logging
+              - grafana-loki-loki-distributed-compactor
+              - grafana-loki-loki-distributed-distributor
+              - grafana-loki-loki-distributed-gateway
+              - grafana-loki-loki-distributed-query-frontend
+              - helm-controller
+              - karma-traefik-certs
+              - kubecost-traefik-certs
+              - prometheus-traefik-certs
+              - kommander-appmanagement
+              - kommander-authorizedlister
+              - kommander-cm
+              - kommander-flux-operator
+              - kommander-kommander-ui
+              - kommander-licensing-cm
+              - kommander-licensing-webhook
+              - kommander-reloader-reloader
+              - kommander-webhook
+              - kube-oidc-proxy
+              - kube-prometheus-stack-grafana
+              - kube-prometheus-stack-kube-state-metrics
+              - kube-prometheus-stack-operator
+              - kubefed-admission-webhook
+              - kubernetes-dashboard
+              - kubetunnel
+              - kubetunnel-webhook
+              - kustomize-controller
+              - logging-operator
+              - minio-operator
+              - node-feature-discovery-master
+              - notification-controller
+              - prometheus-adapter
+              - source-controller
+              - tigera-operator
+              - traefik-forward-auth
+              - traefik-forward-auth-mgmt
+              - velero
+            rules:
+              - deploymentMissingReplicas
+          - controllerNames:
+              - kube-oidc-proxy
+            rules:
+              - livenessProbeMissing
+              - tlsSettingsMissing
+          - controllerNames:
+              - kubernetes-dashboard
+            rules:
+              - insecureCapabilities
+              - tlsSettingsMissing
+          - controllerNames:
+              - kommander-traefik
+            rules:
+              - memoryLimitsMissing
+              - memoryRequestsMissing
+          - controllerNames:
+              - tigera-operator
+            rules:
+              - hostNetworkSet
+          - controllerNames:
+              - kommander-capimate
+              - kubefed-controller-manager
+            rules:
+              - readinessProbeMissing
+          - controllerNames:
+              - kube-prometheus-stack-operator
+            rules:
+              - insecureCapabilities
+          - controllerNames:
+              - coredns
+            rules:
+              - cpuLimitsMissing
+              - runAsRootAllowed
+          - controllerNames:
+              - cappp-controller-manager
+            rules:
+              - insecureCapabilities
+              - notReadOnlyRootFilesystem
+          - controllerNames:
+              - centralized-grafana
+              - karma
+              - thanos-query
+              - kommander-kubecost-cost-analyzer
+              - kommander-kubecost-thanos-query
+              - kommander-kubecost-thanos-query-frontend
+              - create-kommander-thanos-query-stores-configmap
+              - copy-kubecost-grafana-datasource-cm
+              - create-kubecost-thanos-query-stores-configmap
+            rules:
+              - insecureCapabilities
+              - pullPolicyNotAlways
+              - notReadOnlyRootFilesystem
+              - privilegeEscalationAllowed
+              - cpuLimitsMissing
+              - cpuRequestsMissing
+              - memoryRequestsMissing
+              - memoryLimitsMissing
+              - livenessProbeMissing
+              - readinessProbeMissing
+              - privilegeEscalationAllowed
+              - deploymentMissingReplicas
+              - runAsRootAllowed
+          - controllerNames:
+              - dkp-insights
+            rules:
+              - pullPolicyNotAlways
+              - deploymentMissingReplicas
+              - tlsSettingsMissing
+          - controllerNames:
+              - dkp-insights-postgresql
+            rules:
+              - notReadOnlyRootFilesystem
+          - controllerNames:
+              - dkp-insights-management-mgmt-cm
+              - dkp-insights-backend-reforwarder
+              - dkp-insights-backend-deployment
+              - dkp-insights-resolution-cm
+            rules:
+              - livenessProbeMissing
+              - readinessProbeMissing
+          - controllerNames:
+              - dkp-insights-seaweedfs
+            rules:
+              - insecureCapabilities
+              - notReadOnlyRootFilesystem
+              - privilegeEscalationAllowed
+              - runAsRootAllowed
+      enabled: true
+      image:
+        pullPolicy: IfNotPresent
+        repository: quay.io/fairwinds/polaris
+        tag: "5.1"
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+      schedule: '@every 37m'
+      upload:
+        logLevel: INFO
+        resources:
+          limits:
+            cpu: 250m
+            memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 64Mi
+    postgresql:
+      containerSecurityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        privileged: false
+        runAsNonRoot: true
+      global:
+        postgresql:
+          postgresqlDatabase: dkp-insights
+          postgresqlPassword: dkp-insights
+          servicePort: 5432
+      persistence:
+        size: 8Gi
+      resources:
+        limits:
+          cpu: 250m
+          memory: 256Mi
+        requests:
+          cpu: 250m
+          memory: 256Mi
+    reforwarder:
+      resources:
+        limits:
+          cpu: 250m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 64Mi
+    resolutionCM:
+      resources:
+        limits:
+          cpu: 250m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 64Mi
+    seaweedfs:
+      filer:
+        affinity: |
+          podAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 50
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - seaweedfs
+                  - key: component
+                    operator: In
+                    values:
+                    - master
+                topologyKey: topology.kubernetes.io/hostname
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 50
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - seaweedfs
+                  - key: component
+                    operator: In
+                    values:
+                    - volume
+                  - key: component
+                    operator: In
+                    values:
+                    - filer
+                topologyKey: topology.kubernetes.io/hostname
+        data:
+          size: 1Gi
+          type: persistentVolumeClaim
+        enablePVC: false
+        enabled: true
+        extraEnvironmentVars:
+          WEED_LEVELDB2_ENABLED: "false"
+          WEED_MYSQL_ENABLED: "false"
+        extraVolumeMounts: |
+          - name: seaweedfs-filer-config
+            mountPath: "/etc/seaweedfs/filer.toml"
+            subPath: "filer.toml"
+        extraVolumes: |
+          - name: seaweedfs-filer-config
+            configMap:
+              name: {{ include "chart.insightsSeaweedFSCMName" . }}
+              items:
+                - key: filer.toml
+                  path: filer.toml
+        grpcPort: 18888
+        initContainers: |
+          - name: init-db
+            image: docker.io/mesosphere/insights:v0.3.0-beta.1
+            imagePullPolicy: IfNotPresent
+            resources:
+              limits:
+                cpu: 250m
+                memory: 128Mi
+              requests:
+                cpu: 100m
+                memory: 64Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+              privileged: false
+              readOnlyRootFilesystem: true
+              runAsNonRoot: true
+              runAsUser: 65532
+            args:
+            - insights-backend-db-init
+            - --sleep-duration
+            - 15s
+            env:
+            - name: POSTGRES_HOSTNAME
+              value: dkp-insights-postgresql.{{ .Release.Namespace }}.svc.cluster.local
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DATABASE
+              value: dkp-insights
+            - name: POSTGRES_PASSWORD
+              value: dkp-insights
+        logs:
+          size: 2Gi
+          type: persistentVolumeClaim
+        metricsPort: 9327
+        nodeSelector: ""
+        port: 8888
+        resources: |
+          limits:
+            cpu: "250m"
+            memory: "128Mi"
+          requests:
+            cpu: "100m"
+            memory: "64Mi"
+        s3:
+          enabled: true
+          port: 8333
+      global:
+        enableReplication: true
+        replicationPlacment: "002"
+      image:
+        registry: docker.io/
+      master:
+        affinity: |
+          podAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 50
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - seaweedfs
+                  - key: component
+                    operator: In
+                    values:
+                    - filer
+                topologyKey: topology.kubernetes.io/hostname
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 50
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - seaweedfs
+                  - key: component
+                    operator: In
+                    values:
+                    - volume
+                  - key: component
+                    operator: In
+                    values:
+                    - master
+                topologyKey: topology.kubernetes.io/hostname
+        data:
+          size: 2Gi
+          type: persistentVolumeClaim
+        grpcPort: 19333
+        logs:
+          size: 1Gi
+          type: persistentVolumeClaim
+        nodeSelector: ""
+        port: 9333
+        resources: |
+          limits:
+            cpu: "250m"
+            memory: "128Mi"
+          requests:
+            cpu: "100m"
+            memory: "64Mi"
+        volumeSizeLimitMB: "512"
+      nameOverride: dkp-insights-seaweedfs
+      volume:
+        affinity: |
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - seaweedfs
+                  - key: component
+                    operator: In
+                    values:
+                    - volume
+                  - key: component
+                    operator: In
+                    values:
+                    - filer
+                  - key: component
+                    operator: In
+                    values:
+                    - master
+                topologyKey: topology.kubernetes.io/hostname
+        data:
+          size: 8Gi
+          type: persistentVolumeClaim
+        grpcPort: 18080
+        idx:
+          size: 1Gi
+          type: persistentVolumeClaim
+        index: leveldbMedium
+        logs:
+          size: 1Gi
+          type: persistentVolumeClaim
+        metricsPort: 9327
+        nodeSelector: ""
+        port: 8080
+        replicas: 3
+        resources: |
+          limits:
+            cpu: "250m"
+            memory: "128Mi"
+          requests:
+            cpu: "100m"
+            memory: "64Mi"
