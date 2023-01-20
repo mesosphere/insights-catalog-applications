@@ -79,8 +79,8 @@ dkp-insights-0.3.1:
 - "quay.io/fairwinds/polaris:5.1"
 - "docker.io/mesosphere/trivy-bundles:0.32.1-20221024T131903Z"
 dkp-insights-0.4.0-beta.1:
-- "aquasec/kube-bench:v0.6.10"
-- "bitnami/kubectl:1.24.6"
+- "docker.io/aquasec/kube-bench:v0.6.10"
+- "docker.io/bitnami/kubectl:1.24.6"
 - "docker.io/bitnami/bitnami-shell:10-debian-10-r305"
 - "docker.io/bitnami/postgres-exporter:0.10.0-debian-10-r172"
 - "docker.io/bitnami/postgresql:11.14.0-debian-10-r28"
