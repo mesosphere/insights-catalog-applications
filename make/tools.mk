@@ -33,7 +33,7 @@ bloodhound: $(DKP_BLOODHOUND_BIN)
 $(DKP_BLOODHOUND_BIN):
 	$(call print-target)
 	mkdir -p $(dir $@) _install
-	curl -fsSL https://downloads.mesosphere.io/dkp-bloodhound/dkp-bloodhound_v$(DKP_BLOODHOUND_VERSION)_$(GOOS)_$(GOARCH).tar.gz | tar xz -C _install 'dkp-bloodhound'
+	curl -fsSL https://downloads.d2iq.com/dkp-bloodhound/dkp-bloodhound_v$(DKP_BLOODHOUND_VERSION)_$(GOOS)_$(GOARCH).tar.gz | tar xz -C _install 'dkp-bloodhound'
 	mv _install/dkp-bloodhound $@
 	chmod 755 $@
 	rm -rf _install
@@ -45,7 +45,7 @@ dkp-cli: $(DKP_CLI_BIN)
 $(DKP_CLI_BIN):
 	$(call print-target)
 	mkdir -p $(dir $@) _install
-	curl -fsSL https://downloads.mesosphere.io/dkp/$(DKP_CLI_VERSION)/dkp_$(DKP_CLI_VERSION)_$(GOOS)_$(GOARCH).tar.gz | tar xz -C _install 'dkp'
+	curl -fsSL https://downloads.d2iq.com/dkp/$(DKP_CLI_VERSION)/dkp_$(DKP_CLI_VERSION)_$(GOOS)_$(GOARCH).tar.gz | tar xz -C _install 'dkp'
 	mv _install/dkp $@
 	chmod 755 $@
 	rm -rf _install
