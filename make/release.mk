@@ -3,7 +3,7 @@ IMAGE_TAR_FILE := $(BUILD_DIR)/dkp-insights-image-bundle.tar
 REPO_ARCHIVE_FILE := $(BUILD_DIR)/dkp-insights.tar.gz
 CATALOG_IMAGES_TXT := $(BUILD_DIR)/dkp_insights_images.txt
 INSIGHTS_CATALOG_APPLICATIONS_CHART_BUNDLE := $(BUILD_DIR)/dkp-insights-charts-bundle.tar.gz
-RELEASE_S3_BUCKET ?= downloads.mesosphere.io
+RELEASE_S3_BUCKET ?= downloads.d2iq.com
 
 CATALOG_APPLICATIONS_VERSION ?= ""
 
