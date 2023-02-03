@@ -10,7 +10,6 @@ data:
       alertmanager:
         db_channel_buffer_size: "16"
       apiPort: "8090"
-      enforceLicense: false
       engineConfig:
         dkpIdentification:
           appRoots:
