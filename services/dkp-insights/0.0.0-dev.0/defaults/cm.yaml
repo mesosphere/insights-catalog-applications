@@ -181,22 +181,85 @@ data:
           memory: 64Mi
     kubeBench:
       config:
-        hostPID: true
-        hostPaths:
-          - /var/lib/etcd
-          - /var/lib/kubelet
-          - /var/lib/kube-scheduler
-          - /var/lib/kube-controller-manager
-          - /etc/systemd
-          - /lib/systemd
-          - /srv/kubernetes
-          - /etc/kubernetes
-          - /etc/cni/net.d/
-          - /opt/cni/bin/
         image:
           pullPolicy: IfNotPresent
           repository: aquasec/kube-bench
           tag: v0.6.10
+        instances:
+          - additionalArgs:
+              - --targets
+              - node
+            hostPID: true
+            hostPaths:
+              - /var/lib/etcd
+              - /var/lib/kubelet
+              - /var/lib/kube-scheduler
+              - /var/lib/kube-controller-manager
+              - /etc/systemd
+              - /lib/systemd
+              - /srv/kubernetes
+              - /etc/kubernetes
+              - /etc/cni/net.d/
+              - /opt/cni/bin/
+            nameSuffix: nodes
+            skip:
+              - 4.2.6
+              - 4.2.8
+              - 4.2.9
+              - 4.2.10
+              - 4.2.13
+            tolerations:
+              - effect: NoSchedule
+                key: ""
+                operator: Exists
+            useAutodetectedSettings: true
+          - additionalArgs:
+              - --targets
+              - master
+            hostPID: true
+            hostPaths:
+              - /var/lib/etcd
+              - /var/lib/kubelet
+              - /var/lib/kube-scheduler
+              - /var/lib/kube-controller-manager
+              - /etc/systemd
+              - /lib/systemd
+              - /srv/kubernetes
+              - /etc/kubernetes
+              - /etc/cni/net.d/
+              - /opt/cni/bin/
+              - /etc/passwd
+              - /etc/group
+            nameSuffix: control-plane
+            nodeSelector:
+              node-role.kubernetes.io/control-plane: ""
+            skip:
+              - 4.2.6
+              - 4.2.8
+              - 4.2.9
+              - 4.2.10
+              - 4.2.13
+              - 1.1.12
+              - 1.2.6
+              - 1.2.18
+              - 1.3.2
+              - 1.4.1
+              - 1.1.9
+              - 1.1.10
+              - 1.2.1
+              - 1.2.10
+              - 1.2.12
+              - 1.2.13
+              - 1.2.32
+              - 1.3.1
+            tolerations:
+              - effect: NoSchedule
+                key: node-role.kubernetes.io/control-plane
+                operator: Exists
+              - effect: NoSchedule
+                key: node-role.kubernetes.io/master
+                operator: Exists
+            useAutodetectedSettings: false
         pause:
           image:
             pullPolicy: IfNotPresent
@@ -216,32 +279,6 @@ data:
           requests:
             cpu: 100m
             memory: 512Mi
-        skip:
-          - 4.2.6
-          - 4.2.8
-          - 4.2.9
-          - 4.2.10
-          - 4.2.13
-          - 1.1.12
-          - 1.2.6
-          - 1.2.18
-          - 1.3.2
-          - 1.4.1
-          - 1.1.9
-          - 1.1.10
-          - 1.2.1
-          - 1.2.10
-          - 1.2.12
-          - 1.2.13
-          - 1.2.32
-          - 1.3.1
-        tolerations:
-          - effect: NoSchedule
-            key: node-role.kubernetes.io/control-plane
-            operator: Exists
-          - effect: NoSchedule
-            key: node-role.kubernetes.io/master
-            operator: Exists
         upload:
           logLevel: INFO
           resources:
@@ -251,7 +288,6 @@ data:
             requests:
               cpu: 100m
               memory: 64Mi
-        useAutodetectedSettings: true
       enabled: true
       launcher:
         baseEvaluationTimeout: 1m
