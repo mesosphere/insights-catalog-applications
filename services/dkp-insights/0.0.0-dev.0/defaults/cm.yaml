@@ -181,77 +181,115 @@ data:
           memory: 64Mi
     kubeBench:
       config:
+        autodetectableSetups:
+          - setup:
+              additionalArgs:
+                - --targets
+                - node
+              hostPID: true
+              hostPaths:
+                - /var/lib/kubelet
+                - /etc/systemd
+                - /etc/kubernetes
+              skip: []
+            versionSignature: eks
+          - setup:
+              additionalArgs:
+                - --targets
+                - node,policies,managedservices
+              hostPID: true
+              hostPaths:
+                - /var/lib/kubelet
+                - /etc/systemd
+                - /etc/kubernetes
+                - /home/kubernetes
+              skip: []
+            versionSignature: gke
+          - setup:
+              additionalArgs:
+                - --targets
+                - node
+              hostPID: true
+              hostPaths:
+                - /var/lib/kubelet
+                - /etc/systemd
+                - /etc/default
+                - /etc/kubernetes
+              skip: []
+            versionSignature: aks
         image:
           pullPolicy: IfNotPresent
           repository: aquasec/kube-bench
           tag: v0.6.10
         instances:
-          - additionalArgs:
-              - --targets
-              - node
-            hostPID: true
-            hostPaths:
-              - /var/lib/etcd
-              - /var/lib/kubelet
-              - /var/lib/kube-scheduler
-              - /var/lib/kube-controller-manager
-              - /etc/systemd
-              - /lib/systemd
-              - /srv/kubernetes
-              - /etc/kubernetes
-              - /etc/cni/net.d/
-              - /opt/cni/bin/
+          - defaultSetup:
+              additionalArgs:
+                - --targets
+                - node
+              hostPID: true
+              hostPaths:
+                - /var/lib/etcd
+                - /var/lib/kubelet
+                - /var/lib/kube-scheduler
+                - /var/lib/kube-controller-manager
+                - /etc/systemd
+                - /lib/systemd
+                - /srv/kubernetes
+                - /etc/kubernetes
+                - /etc/cni/net.d/
+                - /opt/cni/bin/
+              skip:
+                - 4.2.6
+                - 4.2.8
+                - 4.2.9
+                - 4.2.10
+                - 4.2.13
             nameSuffix: nodes
-            skip:
-              - 4.2.6
-              - 4.2.8
-              - 4.2.9
-              - 4.2.10
-              - 4.2.13
             tolerations:
               - effect: NoSchedule
                 key: ""
                 operator: Exists
-            useAutodetectedSettings: true
-          - additionalArgs:
-              - --targets
-              - master
-            hostPID: true
-            hostPaths:
-              - /var/lib/etcd
-              - /var/lib/kubelet
-              - /var/lib/kube-scheduler
-              - /var/lib/kube-controller-manager
-              - /etc/systemd
-              - /lib/systemd
-              - /srv/kubernetes
-              - /etc/kubernetes
-              - /etc/cni/net.d/
-              - /opt/cni/bin/
-              - /etc/passwd
-              - /etc/group
+            useAutodetectedSetup: true
+          - defaultSetup:
+              additionalArgs:
+                - --targets
+                - master
+              hostPID: true
+              hostPaths:
+                - /var/lib/etcd
+                - /var/lib/kubelet
+                - /var/lib/kube-scheduler
+                - /var/lib/kube-controller-manager
+                - /etc/systemd
+                - /lib/systemd
+                - /srv/kubernetes
+                - /etc/kubernetes
+                - /etc/cni/net.d/
+                - /opt/cni/bin/
+                - /etc/passwd
+                - /etc/group
+              skip:
+                - 4.2.6
+                - 4.2.8
+                - 4.2.9
+                - 4.2.10
+                - 4.2.13
+                - 1.1.12
+                - 1.2.6
+                - 1.2.18
+                - 1.3.2
+                - 1.4.1
+                - 1.1.9
+                - 1.1.10
+                - 1.2.1
+                - 1.2.10
+                - 1.2.12
+                - 1.2.13
+                - 1.2.32
+                - 1.3.1
             nameSuffix: control-plane
             nodeSelector:
               node-role.kubernetes.io/control-plane: ""
-            skip:
-              - 4.2.6
-              - 4.2.8
-              - 4.2.9
-              - 4.2.10
-              - 4.2.13
-              - 1.1.12
-              - 1.2.6
-              - 1.2.18
-              - 1.3.2
-              - 1.4.1
-              - 1.1.9
-              - 1.1.10
-              - 1.2.1
-              - 1.2.10
-              - 1.2.12
-              - 1.2.13
-              - 1.2.32
-              - 1.3.1
             tolerations:
               - effect: NoSchedule
                 key: node-role.kubernetes.io/control-plane
@@ -259,7 +297,7 @@ data:
               - effect: NoSchedule
                 key: node-role.kubernetes.io/master
                 operator: Exists
-            useAutodetectedSettings: false
+            useAutodetectedSetup: false
         pause:
           image:
             pullPolicy: IfNotPresent
