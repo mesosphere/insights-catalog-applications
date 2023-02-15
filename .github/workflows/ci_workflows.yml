@@ -26,11 +26,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_READ_WRITE_USERNAME }}
           password: ${{ secrets.DOCKER_READ_WRITE_PASSWORD }}
-      
-      - name: Clean up Docker
-        run: |
-          docker ps -q | xargs -r docker stop
-          docker system prune -a -f
 
       - name: Pre-commit Checks
         run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="env SKIP=no-commit-to-branch make pre-commit"
@@ -59,10 +54,5 @@ jobs:
     - self-hosted
     - small
     steps:
-      - name: Clean up Docker
-        run: |
-          docker ps -q | xargs -r docker stop
-          docker system prune -a -f
-
       - name: Push Image
         run: make ci.docker.run RUN_WHAT="make ci.docker.push"

@@ -50,8 +50,3 @@ jobs:
 
       - name: Release S3
         run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.s3 CATALOG_APPLICATIONS_VERSION=%teamcity.build.branch% INSIGHTS_CATALOG_APPLICATIONS_REF=${CHECKOUT_BRANCH}"
-
-      - name: Clean up Docker
-        run: |
-          docker ps -q | xargs -r docker stop
-          docker system prune -a -f
