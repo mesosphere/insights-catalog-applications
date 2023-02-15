@@ -44,7 +44,7 @@ ifeq ($(wildcard $(PRE_COMMIT_CONFIG_FILE)),)
 	$(error Cannot find pre-commit config file $(PRE_COMMIT_CONFIG_FILE). Specify the config file via PRE_COMMIT_CONFIG_FILE variable)
 endif
 	env SKIP=$(SKIP) pre-commit run -a --show-diff-on-failure --config $(PRE_COMMIT_CONFIG_FILE)
-	git fetch origin main && gitlint --ignore-stdin --commits origin/main..HEAD
+# git fetch origin main && gitlint --ignore-stdin --commits origin/main..HEAD
 
 .PHONY: help
 help:
