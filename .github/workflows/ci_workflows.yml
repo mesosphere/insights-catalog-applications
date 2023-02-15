@@ -1,4 +1,4 @@
-name: Pre-Commit Checks
+name: Continuous Integration
 on:
   workflow_dispatch:
   push:
@@ -6,22 +6,8 @@ on:
       - km/TC_builds_into_gha
 
 jobs:
-  release:
+  pre-commit:
     name: Pre-Commit Checks
-    permissions:
-      actions: write
-      checks: write
-      contents: write
-      deployments: write
-      discussions: write
-      id-token: write
-      issues: write
-      packages: write
-      pages: write
-      pull-requests: write
-      repository-projects: write
-      security-events: write
-      statuses: write
     runs-on: 
     - self-hosted
     steps:
@@ -39,6 +25,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_READ_WRITE_USERNAME }}
           password: ${{ secrets.DOCKER_READ_WRITE_PASSWORD }}
+      
       - name: Clean up Docker
         run: |
           docker ps -q | xargs -r docker stop
@@ -46,3 +33,35 @@ jobs:
 
       - name: Pre-commit Checks
         run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="env SKIP=no-commit-to-branch make pre-commit"
+
+jobs:
+  unit-test:
+    name: Unit Tests
+    runs-on: 
+    - self-hosted
+    steps:
+      - name: Pre-commit Checks
+        run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="env SKIP=no-commit-to-branch make pre-commit"
+
+jobs:
+  build-image-bundle:
+    name: Build Image Bundle
+    runs-on: 
+    - self-hosted
+    steps:
+      - name: Pre-commit Checks
+        run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.save-images.tar"
+
+jobs:
+  push-ci-docker-image:
+    name: Push CI Docker Image
+    runs-on: 
+    - self-hosted
+    steps:
+      - name: Clean up Docker
+        run: |
+          docker ps -q | xargs -r docker stop
+          docker system prune -a -f
+
+      - name: Push Image
+        run: make ci.docker.run RUN_WHAT="make ci.docker.push"
