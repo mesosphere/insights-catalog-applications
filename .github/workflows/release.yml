@@ -28,7 +28,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::999867407951:role/insights-catalog-applications
+          role-to-assume: arn:aws:iam::633059600857:role/insights-catalog-applications
           aws-region: us-west-2
 
       - name: Login to Docker Hub

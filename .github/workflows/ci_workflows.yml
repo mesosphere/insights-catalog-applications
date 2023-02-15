@@ -48,7 +48,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Run Unit Tests
-        run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="env SKIP=no-commit-to-branch make pre-commit"
+        run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make test"
 
   build-image-bundle:
     name: Build Image Bundle
