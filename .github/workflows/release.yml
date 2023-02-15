@@ -10,6 +10,7 @@ jobs:
     name: Release
     runs-on: 
     - self-hosted
+    - small
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -39,24 +40,16 @@ jobs:
           password: ${{ secrets.DOCKER_READ_WRITE_PASSWORD }}
 
       - name: Release Repo Archive
-        run: |
-          make ci.docker.run GOOS=linux GOARCH=amd64 \
-	          RUN_WHAT="make release.repo-archive CATALOG_APPLICATIONS_VERSION=%teamcity.build.branch% INSIGHTS_CATALOG_APPLICATIONS_REF=${CHECKOUT_BRANCH}"
+        run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.repo-archive CATALOG_APPLICATIONS_VERSION=%teamcity.build.branch% INSIGHTS_CATALOG_APPLICATIONS_REF=${CHECKOUT_BRANCH}"
 
       - name: Release Charts Bundle
-        run: |
-          make ci.docker.run GOOS=linux GOARCH=amd64 \
-	          RUN_WHAT="make release.charts-bundle INSIGHTS_CATALOG_APPLICATIONS_REF=${CHECKOUT_BRANCH}"
+        run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.charts-bundle INSIGHTS_CATALOG_APPLICATIONS_REF=${CHECKOUT_BRANCH}"
 
       - name: Release Save Images
-        run: |
-          make ci.docker.run GOOS=linux GOARCH=amd64 \
-	          RUN_WHAT="make release.save-images.tar INSIGHTS_CATALOG_APPLICATIONS_REF=${CHECKOUT_BRANCH}"
+        run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.save-images.tar INSIGHTS_CATALOG_APPLICATIONS_REF=${CHECKOUT_BRANCH}"
 
       - name: Release S3
-        run: |
-          make ci.docker.run GOOS=linux GOARCH=amd64 \
-	          RUN_WHAT="make release.s3 CATALOG_APPLICATIONS_VERSION=%teamcity.build.branch% INSIGHTS_CATALOG_APPLICATIONS_REF=${CHECKOUT_BRANCH}"
+        run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.s3 CATALOG_APPLICATIONS_VERSION=%teamcity.build.branch% INSIGHTS_CATALOG_APPLICATIONS_REF=${CHECKOUT_BRANCH}"
 
       - name: Clean up Docker
         run: |
