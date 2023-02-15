@@ -34,25 +34,22 @@ jobs:
       - name: Pre-commit Checks
         run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="env SKIP=no-commit-to-branch make pre-commit"
 
-jobs:
   unit-test:
     name: Unit Tests
     runs-on: 
     - self-hosted
     steps:
-      - name: Pre-commit Checks
+      - name: Run Unit Tests
         run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="env SKIP=no-commit-to-branch make pre-commit"
 
-jobs:
   build-image-bundle:
     name: Build Image Bundle
     runs-on: 
     - self-hosted
     steps:
-      - name: Pre-commit Checks
+      - name: Build Image Bundle
         run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.save-images.tar"
 
-jobs:
   push-ci-docker-image:
     name: Push CI Docker Image
     runs-on: 
