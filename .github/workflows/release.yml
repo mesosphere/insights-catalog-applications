@@ -34,8 +34,8 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKER_READ_WRITE_USERNAME }}
-          password: ${{ secrets.DOCKER_READ_WRITE_PASSWORD }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Release Repo Archive
         run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.repo-archive CATALOG_APPLICATIONS_VERSION=%teamcity.build.branch% INSIGHTS_CATALOG_APPLICATIONS_REF=${CHECKOUT_BRANCH}"
