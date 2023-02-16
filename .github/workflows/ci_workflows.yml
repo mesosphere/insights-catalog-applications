@@ -1,6 +1,6 @@
 name: Continuous Integration
 on:
-  # workflow_dispatch:
+  workflow_dispatch:
   # push:
   #   branches:
   #     - km/TC_builds_into_gha
