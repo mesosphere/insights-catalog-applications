@@ -10,56 +10,56 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     steps:
-      - name: test step
+      - name: Set Env Variables
         run: |
           current_branch=${GITHUB_REF#refs/heads/}
-          echo ${current_branch}
           set +e
           IS_BETA=$(echo ${current_branch} | grep '^v[0-9]\.[0-9]\.[0-9]-beta.*$')
           set -e
           if [ ! -z $IS_BETA ]
           then
-            CHECKOUT_BRANCH=beta
+            checkout_branch=beta
           else
-            CHECKOUT_BRANCH=main
+            checkout_branch=main
           fi
-          echo ${CHECKOUT_BRANCH}
+          echo "BUILD_BRANCH=$current_branch" >> $GITHUB_ENV
+          echo "CHECKOUT_BRANCH=$checkout_branch" >> $GITHUB_ENV
 
-      # - name: Checkout code
-      #   uses: actions/checkout@v3
-      #   with:
-      #     ref: beta # TODO: select branch based on current branch
-      #     token: ${{ secrets.MERGEBOT_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          # do we need a ref to the CHECKOUT_BRANCH here?
+          token: ${{ secrets.MERGEBOT_TOKEN }}
 
-      # - name: Configure git for private repo access
-      #   if: ${{ github.actor != 'dependabot[bot]' }}
-      #   run: git config --global url.https://${{ secrets.MERGEBOT_TOKEN }}@github.com/.insteadOf https://github.com/
+      - name: Configure git for private repo access
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        run: git config --global url.https://${{ secrets.MERGEBOT_TOKEN }}@github.com/.insteadOf https://github.com/
 
-      # - name: Install AWS cli
-      #   uses: unfor19/install-aws-cli-action@v1.0.3
-      #   with:
-      #     arch: amd64
+      - name: Install AWS cli
+        uses: unfor19/install-aws-cli-action@v1.0.3
+        with:
+          arch: amd64
 
-      # - name: Configure AWS Credentials
-      #   uses: aws-actions/configure-aws-credentials@v1
-      #   with:
-      #     role-to-assume: arn:aws:iam::633059600857:role/insights-catalog-applications
-      #     aws-region: us-west-2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::633059600857:role/insights-catalog-applications
+          aws-region: us-west-2
 
-      # - name: Login to Docker Hub
-      #   uses: docker/login-action@v1
-      #   with:
-      #     username: ${{ secrets.DOCKER_USERNAME }}
-      #     password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # - name: Release Repo Archive
-      #   run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.repo-archive CATALOG_APPLICATIONS_VERSION=%teamcity.build.branch% INSIGHTS_CATALOG_APPLICATIONS_REF=${CHECKOUT_BRANCH}"
+      - name: Release Repo Archive
+        run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.repo-archive CATALOG_APPLICATIONS_VERSION=${{ env.BUILD_BRANCH }} INSIGHTS_CATALOG_APPLICATIONS_REF=${{ env.CHECKOUT_BRANCH }}"
 
-      # - name: Release Charts Bundle
-      #   run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.charts-bundle INSIGHTS_CATALOG_APPLICATIONS_REF=${CHECKOUT_BRANCH}"
+      - name: Release Charts Bundle
+        run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.charts-bundle INSIGHTS_CATALOG_APPLICATIONS_REF=${{ env.CHECKOUT_BRANCH }}"
 
-      # - name: Release Save Images
-      #   run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.save-images.tar INSIGHTS_CATALOG_APPLICATIONS_REF=${CHECKOUT_BRANCH}"
+      - name: Release Save Images
+        run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.save-images.tar INSIGHTS_CATALOG_APPLICATIONS_REF=${{ env.CHECKOUT_BRANCH }}"
 
-      # - name: Release S3
-      #   run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.s3 CATALOG_APPLICATIONS_VERSION=%teamcity.build.branch% INSIGHTS_CATALOG_APPLICATIONS_REF=${CHECKOUT_BRANCH}"
+      - name: Release S3
+        run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.s3 CATALOG_APPLICATIONS_VERSION=${{ env.BUILD_BRANCH }} INSIGHTS_CATALOG_APPLICATIONS_REF=${{ env.CHECKOUT_BRANCH }}"
