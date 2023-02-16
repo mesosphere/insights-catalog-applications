@@ -1,9 +1,9 @@
 name: Release
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - km/TC_builds_into_gha
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   release:
@@ -38,8 +38,7 @@ jobs:
           fi
           echo "BUILD_BRANCH=$current_branch" >> $GITHUB_ENV
           echo "CHECKOUT_BRANCH=$checkout_branch" >> $GITHUB_ENV
-          # TODO: update to use URL for eng-shipit channel
-          echo "SLACK_WEBHOOK=${{ secrets.KAPTAIN_WEBHOOK_URL }}" >> $GITHUB_ENV
+          echo "SLACK_WEBHOOK=${{ secrets.ENG-SHIPIT_WEBHOOK_URL }}" >> $GITHUB_ENV
 
       - name: Checkout code
         uses: actions/checkout@v3
