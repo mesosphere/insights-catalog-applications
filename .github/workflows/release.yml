@@ -13,15 +13,16 @@ jobs:
       - name: test step
         run: |
           current_branch=${GITHUB_REF#refs/heads/}
-          echo $current_branch
-          IS_BETA=$(echo $current_branch | grep '^v[0-9]\.[0-9]\.[0-9]-beta.*$')
+          echo ${current_branch}
+          IS_BETA=$(echo ${current_branch} | grep '^v[0-9]\.[0-9]\.[0-9]-beta.*$')
           if [ ! -z $IS_BETA ]
           then
 	          CHECKOUT_BRANCH=beta
           else
 	          CHECKOUT_BRANCH=main
           fi
-          echo $CHECKOUT_BRANCH
+          echo ${CHECKOUT_BRANCH}
+
       # - name: Checkout code
       #   uses: actions/checkout@v3
       #   with:
