@@ -4,6 +4,7 @@ REPO_ARCHIVE_FILE := $(BUILD_DIR)/dkp-insights.tar.gz
 CATALOG_IMAGES_TXT := $(BUILD_DIR)/dkp_insights_images.txt
 INSIGHTS_CATALOG_APPLICATIONS_CHART_BUNDLE := $(BUILD_DIR)/dkp-insights-charts-bundle.tar.gz
 RELEASE_S3_BUCKET ?= downloads.mesosphere.io
+REPO_ROOT := $(CURDIR)
 
 CATALOG_APPLICATIONS_VERSION ?= ""
 
@@ -23,6 +24,7 @@ release.repo-archive: $(BUILD_DIR)
 ifeq ($(CATALOG_APPLICATIONS_VERSION),"")
 	$(info CATALOG_APPLICATIONS_VERSION should be set to the version which is part of the s3 file path)
 else
+	git config --global --add safe.directory $(REPO_ROOT)
 	git archive --format "tar.gz" -o $(REPO_ARCHIVE_FILE) \
 	                              $(CATALOG_APPLICATIONS_VERSION) -- \
 	                              helm-repositories services
