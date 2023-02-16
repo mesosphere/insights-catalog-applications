@@ -14,7 +14,9 @@ jobs:
         run: |
           current_branch=${GITHUB_REF#refs/heads/}
           echo ${current_branch}
+          set +e
           IS_BETA=$(echo ${current_branch} | grep '^v[0-9]\.[0-9]\.[0-9]-beta.*$')
+          set -e
           if [ ! -z $IS_BETA ]
           then
             CHECKOUT_BRANCH=beta
