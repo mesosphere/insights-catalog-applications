@@ -16,6 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
+          ref: ${GITHUB_REF#refs/tags/}
           token: ${{ secrets.MERGEBOT_TOKEN }}
 
       - name: Pre-commit Checks
