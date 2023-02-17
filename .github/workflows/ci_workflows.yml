@@ -15,8 +15,8 @@ jobs:
         with:
           token: ${{ secrets.MERGEBOT_TOKEN }}
 
-      # - name: Pre-commit Checks
-      #   run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="env SKIP=no-commit-to-branch make pre-commit"
+      - name: Pre-commit Checks
+        run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="env SKIP=no-commit-to-branch make pre-commit"
 
   unit-test:
     name: Unit Tests
@@ -27,8 +27,8 @@ jobs:
         with:
           token: ${{ secrets.MERGEBOT_TOKEN }}
 
-      # - name: Run Unit Tests
-      #   run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make test"
+      - name: Run Unit Tests
+        run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make test"
 
   build-image-bundle:
     name: Build Image Bundle
@@ -39,8 +39,8 @@ jobs:
         with:
           token: ${{ secrets.MERGEBOT_TOKEN }}
 
-      # - name: Build Image Bundle
-      #   run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.save-images.tar"
+      - name: Build Image Bundle
+        run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.save-images.tar"
 
   push-ci-docker-image:
     name: Push CI Docker Image
@@ -50,9 +50,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.MERGEBOT_TOKEN }}
-
-      - name: Configure git for private repo access
-        run: git config --global url.https://${{ secrets.MERGEBOT_TOKEN }}@github.com/.insteadOf https://github.com/
 
       - name: Push Image
         env:
