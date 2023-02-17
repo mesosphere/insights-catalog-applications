@@ -2,10 +2,8 @@ name: Release
 on:
   workflow_dispatch:
   push:
-    branches:
-      - km/TC_builds_into_gha
-    # tags:
-    #   - 'v*'
+    tags:
+      - 'v*'
 
 jobs:
   release:
