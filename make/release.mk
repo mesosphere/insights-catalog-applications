@@ -4,7 +4,7 @@ REPO_ARCHIVE_FILE := $(BUILD_DIR)/dkp-insights.tar.gz
 CATALOG_IMAGES_TXT := $(BUILD_DIR)/dkp_insights_images.txt
 INSIGHTS_CATALOG_APPLICATIONS_CHART_BUNDLE := $(BUILD_DIR)/dkp-insights-charts-bundle.tar.gz
 RELEASE_S3_BUCKET ?= downloads.mesosphere.io
-REPO_ROOT := $(CURDIR)
+REPO_ROOT := $(shell git rev-parse --show-toplevel)
 
 CATALOG_APPLICATIONS_VERSION ?= ""
 
@@ -24,7 +24,7 @@ release.repo-archive: $(BUILD_DIR)
 ifeq ($(CATALOG_APPLICATIONS_VERSION),"")
 	$(info CATALOG_APPLICATIONS_VERSION should be set to the version which is part of the s3 file path)
 else
-	git config --global --add safe.directory $(REPO_ROOT)
+	# git config --global --add safe.directory $(REPO_ROOT)
 	git archive --format "tar.gz" -o $(REPO_ARCHIVE_FILE) \
 	                              $(CATALOG_APPLICATIONS_VERSION) -- \
 	                              helm-repositories services
@@ -47,9 +47,9 @@ else
 	echo "Published Image Bundle to $(IMAGE_BUNDLE_URL)"
 ifeq (,$(findstring dev,$(CATALOG_APPLICATIONS_VERSION)))
 	# Make sure to set SLACK_WEBHOOK environment variable to webhook url for the below mentioned channel
-	curl -X POST -H 'Content-type: application/json' \
-	--data '{"channel":"#eng-shipit","blocks":[{"type":"header","text":{"type":"plain_text","text":":announce: DKP Insights Catalog Applications $(CATALOG_APPLICATIONS_VERSION) is out!","emoji":true}},{"type":"section","text":{"type":"mrkdwn","text":"*Bundles:*\n:airgap: Airgapped Image Bundle: $(IMAGE_BUNDLE_URL)\n:package: Chart Bundle: $(CHART_BUNDLE_URL)\n:github: Git Repo Tarball: $(REPO_ARCHIVE_URL)"}}]}' \
-	$(SLACK_WEBHOOK)
+	# curl -X POST -H 'Content-type: application/json' \
+	# --data '{"channel":"#eng-shipit","blocks":[{"type":"header","text":{"type":"plain_text","text":":announce: DKP Insights Catalog Applications $(CATALOG_APPLICATIONS_VERSION) is out!","emoji":true}},{"type":"section","text":{"type":"mrkdwn","text":"*Bundles:*\n:airgap: Airgapped Image Bundle: $(IMAGE_BUNDLE_URL)\n:package: Chart Bundle: $(CHART_BUNDLE_URL)\n:github: Git Repo Tarball: $(REPO_ARCHIVE_URL)"}}]}' \
+	# $(SLACK_WEBHOOK)
 endif
 endif
 

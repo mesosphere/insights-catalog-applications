@@ -26,11 +26,11 @@ jobs:
     steps:
       - name: Set Env Variables
         run: |
-          current_branch=${GITHUB_REF#refs/heads/}
+          current_branch=${GITHUB_REF#refs/tags/}
           set +e
-          IS_BETA=$(echo ${current_branch} | grep '^v[0-9]\.[0-9]\.[0-9]-beta.*$')
+          PRERELEASE_BUILDMETADATA=$(echo ${current_branch} | perl -ne 'print "$4$5" if /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/')
           set -e
-          if [ ! -z $IS_BETA ]
+          if [ ! -z ${PRERELEASE_BUILDMETADATA} ]
           then
             checkout_branch=beta
           else
