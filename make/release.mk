@@ -4,7 +4,6 @@ REPO_ARCHIVE_FILE := $(BUILD_DIR)/dkp-insights.tar.gz
 CATALOG_IMAGES_TXT := $(BUILD_DIR)/dkp_insights_images.txt
 INSIGHTS_CATALOG_APPLICATIONS_CHART_BUNDLE := $(BUILD_DIR)/dkp-insights-charts-bundle.tar.gz
 RELEASE_S3_BUCKET ?= downloads.mesosphere.io
-REPO_ROOT := $(shell git rev-parse --show-toplevel)
 
 CATALOG_APPLICATIONS_VERSION ?= ""
 
