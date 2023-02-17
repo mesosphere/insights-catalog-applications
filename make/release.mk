@@ -46,9 +46,9 @@ else
 	echo "Published Image Bundle to $(IMAGE_BUNDLE_URL)"
 ifeq (,$(findstring dev,$(CATALOG_APPLICATIONS_VERSION)))
 	# Make sure to set SLACK_WEBHOOK environment variable to webhook url for the below mentioned channel
-	# curl -X POST -H 'Content-type: application/json' \
-	# --data '{"channel":"#eng-shipit","blocks":[{"type":"header","text":{"type":"plain_text","text":":announce: DKP Insights Catalog Applications $(CATALOG_APPLICATIONS_VERSION) is out!","emoji":true}},{"type":"section","text":{"type":"mrkdwn","text":"*Bundles:*\n:airgap: Airgapped Image Bundle: $(IMAGE_BUNDLE_URL)\n:package: Chart Bundle: $(CHART_BUNDLE_URL)\n:github: Git Repo Tarball: $(REPO_ARCHIVE_URL)"}}]}' \
-	# $(SLACK_WEBHOOK)
+	curl -X POST -H 'Content-type: application/json' \
+	--data '{"channel":"#eng-shipit","blocks":[{"type":"header","text":{"type":"plain_text","text":":announce: DKP Insights Catalog Applications $(CATALOG_APPLICATIONS_VERSION) is out!","emoji":true}},{"type":"section","text":{"type":"mrkdwn","text":"*Bundles:*\n:airgap: Airgapped Image Bundle: $(IMAGE_BUNDLE_URL)\n:package: Chart Bundle: $(CHART_BUNDLE_URL)\n:github: Git Repo Tarball: $(REPO_ARCHIVE_URL)"}}]}' \
+	$(SLACK_WEBHOOK)
 endif
 endif
 
