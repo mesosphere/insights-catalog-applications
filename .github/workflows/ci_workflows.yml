@@ -51,6 +51,9 @@ jobs:
         with:
           token: ${{ secrets.MERGEBOT_TOKEN }}
 
+      - name: Configure git for private repo access
+        run: git config --global url.https://${{ secrets.MERGEBOT_TOKEN }}@github.com/.insteadOf https://github.com/
+
       - name: Push Image
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_READ_WRITE_USERNAME }}
