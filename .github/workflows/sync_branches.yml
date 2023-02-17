@@ -3,7 +3,7 @@ name: Sync Branches with Main
 on:
   push:
     branches:
-      - main-gha-test
+      - main
 
 jobs:
   sync-beta-with-main:
@@ -31,5 +31,5 @@ jobs:
         uses: tretuna/sync-branches@1.2.0
         with:
           GITHUB_TOKEN: ${{ secrets.MESOSPHERECI_USER_TOKEN }}
-          FROM_BRANCH: 'main-gha-test'
-          TO_BRANCH: 'beta-gha-test'
+          FROM_BRANCH: 'main'
+          TO_BRANCH: 'beta'
