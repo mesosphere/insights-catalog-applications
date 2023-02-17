@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Set Env Variable
         run: |
-          echo "CHECKOUT_BRANCH=${GITHUB_REF#refs/tags/}"" >> $GITHUB_ENV
+          echo "CHECKOUT_BRANCH=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - name: Checkout code
         uses: actions/checkout@v3
