@@ -38,7 +38,8 @@ ci.docker.build: dockerauth ; $(info $(M) Building CI Docker image)
 .PHONY: ci.docker.push
 ci.docker.push: ## Pushes the CI Docker image
 ci.docker.push: ci.docker.ensure ; $(info $(M) Pushes the CI Docker image)
-	docker push $(CI_DOCKER_IMG)
+	echo $(REPO_ROOT)
+	# docker push $(CI_DOCKER_IMG)
 
 .PHONY: ci.docker.run
 ci.docker.run: ## Runs the build in the CI Docker image.
