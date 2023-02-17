@@ -23,6 +23,7 @@ release.repo-archive: $(BUILD_DIR)
 ifeq ($(CATALOG_APPLICATIONS_VERSION),"")
 	$(info CATALOG_APPLICATIONS_VERSION should be set to the version which is part of the s3 file path)
 else
+	git config --global --add safe.directory $(REPO_ROOT)
 	git archive --format "tar.gz" -o $(REPO_ARCHIVE_FILE) \
 	                              $(CATALOG_APPLICATIONS_VERSION) -- \
 	                              helm-repositories services
