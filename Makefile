@@ -2,7 +2,7 @@
 
 SHELL := /bin/bash -euo pipefail
 
-REPO_ROOT := $(CURDIR)
+REPO_ROOT := $(shell git rev-parse --show-toplevel)
 
 INTERACTIVE := $(shell [ -t 0 ] && echo 1)
 
