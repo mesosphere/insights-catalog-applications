@@ -43,7 +43,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          # do we need a ref to the CHECKOUT_BRANCH here?
           token: ${{ secrets.MERGEBOT_TOKEN }}
 
       - name: Configure git for private repo access
