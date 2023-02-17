@@ -44,7 +44,6 @@ ci.docker.push: ci.docker.ensure ; $(info $(M) Pushes the CI Docker image)
 ci.docker.run: ## Runs the build in the CI Docker image.
 ci.docker.run: RUN_WHAT ?=
 ci.docker.run: ci.docker.ensure ; $(info $(M) Runs the build in the CI Docker image)
-	git config --global --add safe.directory $(REPO_ROOT)
 	docker run --rm -i$(if $(RUN_WHAT),,$(if $(INTERACTIVE),t)) \
 		-v $(REPO_ROOT):$(REPO_ROOT) \
  		-w $(REPO_ROOT) \
