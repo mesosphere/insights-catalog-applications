@@ -31,6 +31,7 @@ ifneq ($(wildcard $(REPO_ROOT)/.pre-commit-config.yaml),)
 else
 	PRE_COMMIT_CONFIG_FILE ?= $(REPO_ROOT)/repo-infra/.pre-commit-config.yaml
 endif
+git config --global --add safe.directory $(REPO_ROOT)
 
 include make/ci.mk
 include make/validate.mk
@@ -43,7 +44,6 @@ pre-commit: ; $(info $(M) running pre-commit)
 ifeq ($(wildcard $(PRE_COMMIT_CONFIG_FILE)),)
 	$(error Cannot find pre-commit config file $(PRE_COMMIT_CONFIG_FILE). Specify the config file via PRE_COMMIT_CONFIG_FILE variable)
 endif
-	# git config --global --add safe.directory $(REPO_ROOT)
 	env SKIP=$(SKIP) pre-commit run -a --show-diff-on-failure --config $(PRE_COMMIT_CONFIG_FILE)
 	git fetch origin main && gitlint --ignore-stdin --commits origin/main..HEAD
 
