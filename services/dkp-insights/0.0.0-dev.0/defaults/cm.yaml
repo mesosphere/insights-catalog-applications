@@ -404,7 +404,7 @@ data:
             cpu: 100m
             memory: 64Mi
     polaris:
-      baseEvaluationTimeout: 15m
+      baseEvaluationTimeout: 5m
       config:
         checks:
           cpuLimitsMissing: warning
@@ -1450,7 +1450,7 @@ data:
         enabled: true
         memoryWorkingSetToRequestsThreshold: 0.75
     trivy:
-      baseEvaluationTimeout: 20m
+      baseEvaluationTimeout: 10m
       enabled: false
       envSecret:
         enabled: false
