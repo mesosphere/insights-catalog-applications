@@ -1,0 +1,79 @@
+name: Release
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    name: Release
+    permissions:
+      actions: write
+      checks: write
+      contents: write
+      deployments: write
+      discussions: write
+      id-token: write
+      issues: write
+      packages: write
+      pages: write
+      pull-requests: write
+      repository-projects: write
+      security-events: write
+      statuses: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Env Variables
+        run: |
+          current_branch=${GITHUB_REF#refs/tags/}
+          set +e
+          PRERELEASE_BUILDMETADATA=$(echo ${current_branch} | perl -ne 'print "$4$5" if /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/')
+          set -e
+          if [ ! -z ${PRERELEASE_BUILDMETADATA} ]
+          then
+            checkout_branch=beta
+          else
+            checkout_branch=main
+          fi
+          echo "BUILD_BRANCH=$current_branch" >> $GITHUB_ENV
+          echo "CHECKOUT_BRANCH=$checkout_branch" >> $GITHUB_ENV
+          echo "SLACK_WEBHOOK=${{ secrets.ENG_SHIPIT_WEBHOOK_URL }}" >> $GITHUB_ENV
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.MERGEBOT_TOKEN }}
+
+      - name: Configure git for private repo access
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        run: git config --global url.https://${{ secrets.MERGEBOT_TOKEN }}@github.com/.insteadOf https://github.com/
+
+      - name: Install AWS cli
+        uses: unfor19/install-aws-cli-action@v1.0.3
+        with:
+          arch: amd64
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::633059600857:role/insights-catalog-applications
+          aws-region: us-east-1
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Release Repo Archive
+        run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.repo-archive CATALOG_APPLICATIONS_VERSION=${{ env.BUILD_BRANCH }} INSIGHTS_CATALOG_APPLICATIONS_REF=${{ env.CHECKOUT_BRANCH }}"
+
+      - name: Release Charts Bundle
+        run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.charts-bundle INSIGHTS_CATALOG_APPLICATIONS_REF=${{ env.CHECKOUT_BRANCH }}"
+
+      - name: Release Save Images
+        run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.save-images.tar INSIGHTS_CATALOG_APPLICATIONS_REF=${{ env.CHECKOUT_BRANCH }}"
+
+      - name: Release S3
+        run: make ci.docker.run GOOS=linux GOARCH=amd64 RUN_WHAT="make release.s3 CATALOG_APPLICATIONS_VERSION=${{ env.BUILD_BRANCH }} INSIGHTS_CATALOG_APPLICATIONS_REF=${{ env.CHECKOUT_BRANCH }}"
