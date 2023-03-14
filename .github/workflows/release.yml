@@ -28,7 +28,7 @@ jobs:
         run: |
           current_branch=${GITHUB_REF#refs/tags/}
           set +e
-          PRERELEASE_BUILDMETADATA=$(echo ${current_branch} | perl -ne 'print "$4$5" if /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/')
+          PRERELEASE_BUILDMETADATA=$(echo ${current_branch} | perl -ne 'print "$4$5" if /^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/')
           set -e
           if [ ! -z ${PRERELEASE_BUILDMETADATA} ]
           then
