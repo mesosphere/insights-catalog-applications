@@ -130,7 +130,19 @@ data:
                 kind: ConstraintTemplate
               nameRegexp: requiredserviceaccountname
       eventExpirationTime: 1h
+      livenessProbe:
+        failureThreshold: 3
+        initialDelaySeconds: 60
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
       log_level: INFO
+      readinessProbe:
+        failureThreshold: 3
+        initialDelaySeconds: 60
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
       resources:
         limits:
           cpu: 1000m
@@ -1464,7 +1476,7 @@ data:
         enabled: false
         name: dkp-insights-trivy-env
       image:
-        imageFull: mesosphere/trivy-bundles:0.35.0-20221223T150549Z
+        imageFull: mesosphere/trivy-bundles:0.35.0-20230322T060227Z
         pullPolicy: IfNotPresent
       resources:
         limits:
