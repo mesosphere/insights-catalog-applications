@@ -1237,6 +1237,7 @@ data:
         requests:
           cpu: 100m
           memory: 64Mi
+    priorityClassName: ""
     reforwarder:
       resources:
         limits:
