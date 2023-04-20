@@ -29,8 +29,14 @@ jobs:
 
       - name: Opening pull request in Beta branch
         id: pull
-        uses: tretuna/sync-branches@1.2.0
-        with:
-          GITHUB_TOKEN: ${{ secrets.MERGEBOT_TOKEN }}
-          FROM_BRANCH: 'main'
-          TO_BRANCH: 'beta'
+        run: |
+          git checkout main
+          hub pull-request -m "chore: Sync main with beta" \
+            -m "Sync latest main with beta branch" \
+            -b beta \
+            -l "ok-to-test","ready for review"
+        # uses: tretuna/sync-branches@1.2.0
+        # with:
+        #   GITHUB_TOKEN: ${{ secrets.MERGEBOT_TOKEN }}
+        #   FROM_BRANCH: 'main'
+        #   TO_BRANCH: 'beta'
