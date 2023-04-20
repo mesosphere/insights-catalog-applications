@@ -1,6 +1,7 @@
 name: Sync Branches with Main
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
