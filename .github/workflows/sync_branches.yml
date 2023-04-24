@@ -35,6 +35,8 @@ jobs:
         id: pull
         run: |
           git checkout main
+          git checkout -b sync_from_main
+          git push origin sync_from_main
           hub pull-request -m "chore: Sync main with beta" \
             -m "Sync latest main with beta branch" \
             -b beta \
