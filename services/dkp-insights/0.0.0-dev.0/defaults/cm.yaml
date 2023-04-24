@@ -1204,31 +1204,26 @@ data:
             cpu: 100m
             memory: 64Mi
     postgresql:
-      containerSecurityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-            - ALL
-        privileged: false
-        runAsNonRoot: true
       global:
         connectionPool:
           connectionMaxLifetime: 1h
           maxIdleConnections: 30
           maxOpenConnections: 50
         postgresql:
-          postgresqlDatabase: dkp-insights
-          postgresqlPassword: dkp-insights
+          auth:
+            database: dkp-insights
+            postgresPassword: dkp-insights
           servicePort: 5432
-      persistence:
-        size: 8Gi
-      resources:
-        limits:
-          cpu: 250m
-          memory: 1Gi
-        requests:
-          cpu: 250m
-          memory: 1Gi
+      primary:
+        persistence:
+          size: 8Gi
+        resources:
+          limits:
+            cpu: 250m
+            memory: 1Gi
+          requests:
+            cpu: 250m
+            memory: 1Gi
     preUpgrade:
       resources:
         limits:
@@ -1313,7 +1308,7 @@ data:
         grpcPort: 18888
         initContainers: |
           - name: init-db
-            image: docker.io/mesosphere/insights:v0.2.3
+            image: docker.io/mesosphere/insights:v0.4.1
             imagePullPolicy: IfNotPresent
             resources:
               limits:
