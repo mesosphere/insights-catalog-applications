@@ -129,6 +129,9 @@ data:
                 group: templates.gatekeeper.sh
                 kind: ConstraintTemplate
               nameRegexp: requiredserviceaccountname
+        mode: daytwo
+        replay:
+          apiServerService: dkp-insights-replay-troubleshoot-live.default.svc.cluster.local
       eventExpirationTime: 1h
       livenessProbe:
         failureThreshold: 3
