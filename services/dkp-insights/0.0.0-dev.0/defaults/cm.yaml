@@ -131,7 +131,7 @@ data:
               nameRegexp: requiredserviceaccountname
         mode: daytwo
         replay:
-          apiServerService: dkp-insights-replay-troubleshoot-live.default.svc.cluster.local
+          apiServerService: dkp-insights-replay-troubleshoot-live
       eventExpirationTime: 1h
       livenessProbe:
         failureThreshold: 3
