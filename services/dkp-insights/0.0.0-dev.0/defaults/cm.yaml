@@ -20,7 +20,7 @@ data:
             - groupKind:
                 group: apps
                 kind: DaemonSet
-              nameRegexp: ebs-csi-node|calico-system|calico-node|csi-node-driver|capz-nmi|kube-prometheus-stack-prometheus-node-exporter|logging-operator-logging-fluentbit|kube-proxy|node-feature-discovery-worker|etcd-metrics-proxy|aws-cloud-controller-manager
+              nameRegexp: ebs-csi-node|calico-system|calico-node|csi-node-driver|capz-nmi|kube-prometheus-stack-prometheus-node-exporter|logging-operator-logging-fluentbit|kube-proxy|node-feature-discovery-worker|etcd-metrics-proxy|aws-cloud-controller-manager|istio-cni-node
             - groupKind:
                 group: helm.toolkit.fluxcd.io
                 kind: HelmRelease
@@ -28,7 +28,7 @@ data:
             - groupKind:
                 group: ""
                 kind: Pod
-              nameRegexp: kube-scheduler-ip-.*?
+              nameRegexp: kube-scheduler-ip-.*?|check-dkp-loki-.*?|check-dkp-velero-.*?
             - groupKind:
                 group: ""
                 kind: ConfigMap
@@ -64,7 +64,7 @@ data:
             - groupKind:
                 group: apps
                 kind: Deployment
-              nameRegexp: helm-controller|kustomize-controller|not-used-in-a-patch|notification-controller|source-controller
+              nameRegexp: helm-controller|kustomize-controller|not-used-in-a-patch|notification-controller|source-controller|istiod|istio-ingressgateway
             - groupKind:
                 group: batch
                 kind: Job
