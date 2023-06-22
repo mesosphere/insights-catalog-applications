@@ -523,7 +523,7 @@ data:
         enabled: false
         name: dkp-insights-trivy-env
       image:
-        imageFull: mesosphere/trivy-bundles:0.42.1-20230614T060340Z
+        imageFull: mesosphere/trivy-bundles:0.42.1-20230621T060348Z
         pullPolicy: IfNotPresent
       resources:
         limits:
